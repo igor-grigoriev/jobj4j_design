@@ -3,6 +3,7 @@ package ru.job4j.generic;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 public final class MemStore<T extends Base> implements Store<T> {
     private final Map<String, T> storage = new HashMap<>();
@@ -14,20 +15,12 @@ public final class MemStore<T extends Base> implements Store<T> {
 
     @Override
     public boolean replace(String id, T model) {
-        if (storage.containsKey(id)) {
-            storage.put(id, model);
-            return true;
-        }
-        return false;
+        return model.equals(storage.computeIfPresent(id, (s, t) -> model));
     }
 
     @Override
     public boolean delete(String id) {
-        if (storage.containsKey(id)) {
-            storage.remove(id);
-            return true;
-        }
-        return false;
+        return storage.containsKey(id) && storage.get(id).equals(storage.remove(id));
     }
 
     @Override
