@@ -9,20 +9,21 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     private int size;
     private int modCount;
     private Node<E> first;
-    private Node<E> last;
 
     @Override
     public void add(E value) {
-        final Node<E> l = last;
-        final Node<E> newNode = new Node<>(l, value, null);
-        last = newNode;
-        if (l == null) {
-            first = newNode;
-        } else {
-            l.next = newNode;
-        }
         size++;
         modCount++;
+        Node<E> node = new Node<E>(value, null);
+        if (first == null) {
+            first = node;
+            return;
+        }
+        Node<E> tail = first;
+        while (tail.next != null) {
+            tail = tail.next;
+        }
+        tail.next = node;
     }
 
     @Override
@@ -34,9 +35,7 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            private Node<E> lastReturned;
-            private Node<E> next = first;
-            private int nextIndex;
+            private Node<E> node = first;
             private final int expectedModCount = modCount;
 
             @Override
@@ -44,7 +43,7 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
                 if (modCount != expectedModCount) {
                     throw new ConcurrentModificationException();
                 }
-                return nextIndex < size;
+                return node != null;
             }
 
             @Override
@@ -52,10 +51,9 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                lastReturned = next;
-                next = next.next;
-                nextIndex++;
-                return lastReturned.item;
+                E value = node.item;
+                node = node.next;
+                return value;
             }
         };
     }
@@ -63,27 +61,17 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     private static class Node<E> {
         E item;
         Node<E> next;
-        Node<E> prev;
 
-        Node(Node<E> prev, E element, Node<E> next) {
+        Node(E element, Node<E> next) {
             this.item = element;
             this.next = next;
-            this.prev = prev;
         }
     }
 
     private Node<E> node(int index) {
-        Node<E> x;
-        if (index < (size >> 1)) {
-            x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-        } else {
-            x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
+        Node<E> x = first;
+        for (int i = 0; i < index; i++) {
+            x = x.next;
         }
         return x;
     }
