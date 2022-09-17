@@ -9,6 +9,9 @@ public class SimpleQueue<T> {
     private final SimpleStack<T> out = new SimpleStack<>();
 
     public T poll() {
+        if (inCount == 0 && outCount == 0) {
+            throw new NoSuchElementException();
+        }
         if (outCount == 0) {
             while (inCount > 0) {
                 out.push(in.pop());
