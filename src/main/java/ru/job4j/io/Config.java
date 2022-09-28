@@ -19,11 +19,12 @@ public class Config {
         try (BufferedReader read = new BufferedReader(new FileReader(this.path))) {
             read.lines().forEach(it -> {
                 if (!it.isEmpty() && !it.startsWith("#")) {
-                    String[] ar = it.split("=");
-                    if (ar.length < 2 || ar[0].isEmpty() || ar[1].isEmpty()) {
-                        throw new IllegalArgumentException();
+                    String key = (it.indexOf("=") > 0) ? it.substring(0, it.indexOf("=")) : "";
+                    String value = (it.indexOf("=") > 0) ? it.substring(it.indexOf("=") + 1) : "";
+                    if (key.isBlank() || value.isBlank()) {
+                        throw new IllegalArgumentException("Ошибка в строке " + it);
                     }
-                    values.putIfAbsent(it.split("=")[0], it.split("=")[1]);
+                    values.putIfAbsent(key, value);
                 }
             });
         } catch (IOException e) {

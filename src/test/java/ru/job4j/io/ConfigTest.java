@@ -24,6 +24,8 @@ class ConfigTest {
     void whenPairWithError() {
         String path = "./data/pair_with_error.properties";
         Config config = new Config(path);
-        assertThatThrownBy(config::load).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(config::load)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Ошибка в строке ");
     }
 }
