@@ -27,6 +27,9 @@ public class Search {
         if (!file.isDirectory()) {
             throw new IllegalArgumentException(String.format("Not directory %s", file.getAbsoluteFile()));
         }
+        if (!args[1].startsWith(".")) {
+            throw new IllegalArgumentException(String.format("Invalid argument number 2 %s", args[1]));
+        }
     }
 
     public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
