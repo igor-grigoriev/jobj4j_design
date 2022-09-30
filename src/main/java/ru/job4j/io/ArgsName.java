@@ -13,6 +13,10 @@ public class ArgsName {
         return values.get(key);
     }
 
+    public int size() {
+        return values.size();
+    }
+
     private void parse(String[] args) {
         for (String arg : args) {
             String[] ar = arg.split("=", 2);
