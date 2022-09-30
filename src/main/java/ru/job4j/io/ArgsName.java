@@ -7,7 +7,7 @@ public class ArgsName {
     private final Map<String, String> values = new HashMap<>();
 
     public String get(String key) {
-        if (!values.containsKey(key) || values.get(key).isEmpty()) {
+        if (!values.containsKey(key) || values.get(key).isBlank()) {
             throw new IllegalArgumentException();
         }
         return values.get(key);
@@ -16,7 +16,8 @@ public class ArgsName {
     private void parse(String[] args) {
         for (String arg : args) {
             String[] ar = arg.split("=", 2);
-            if (ar.length != 2) {
+            if (ar.length != 2 || ar[0].isBlank() || ar[1].isBlank()
+                    || "-".equals(ar[0]) || !ar[0].contains("-")) {
                 throw new IllegalArgumentException();
             }
             values.putIfAbsent(ar[0].substring(1), ar[1]);
