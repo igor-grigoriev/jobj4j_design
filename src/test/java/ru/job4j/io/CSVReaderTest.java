@@ -15,7 +15,7 @@ class CSVReaderTest {
                 "name;age;last_name;education",
                 "Tom;20;Smith;Bachelor",
                 "Jack;25;Johnson;Undergraduate",
-                "William;30;Brown;SecondarySpecial"
+                "William;30;Brown;Secondary special"
         );
         File file = folder.resolve("source.csv").toFile();
         File target = folder.resolve("target.csv").toFile();
@@ -28,7 +28,7 @@ class CSVReaderTest {
                 "name;education",
                 "Tom;Bachelor",
                 "Jack;Undergraduate",
-                "William;SecondarySpecial"
+                "William;Secondary special"
         ).concat(System.lineSeparator());
         CSVReader.handle(argsName);
         assertThat(Files.readString(target.toPath())).isEqualTo(expected);
@@ -41,7 +41,7 @@ class CSVReaderTest {
                 "name;age;last_name;education",
                 "Tom;20;Smith;Bachelor",
                 "Jack;25;Johnson;Undergraduate",
-                "William;30;Brown;SecondarySpecial"
+                "William;30;Brown;Secondary special"
         );
         File file = folder.resolve("source.csv").toFile();
         File target = folder.resolve("target.csv").toFile();
@@ -55,7 +55,7 @@ class CSVReaderTest {
                 "education;age;last_name",
                 "Bachelor;20;Smith",
                 "Undergraduate;25;Johnson",
-                "SecondarySpecial;30;Brown"
+                "Secondary special;30;Brown"
         ).concat(System.lineSeparator());
         CSVReader.handle(argsName);
         assertThat(Files.readString(target.toPath())).isEqualTo(expected);

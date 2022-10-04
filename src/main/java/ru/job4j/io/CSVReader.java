@@ -10,6 +10,7 @@ public class CSVReader {
         String[] columns = argsName.get("filter").split(",");
         try (Scanner scan = new Scanner(new FileReader(argsName.get("path")));
              PrintWriter pw = new PrintWriter(new FileWriter(argsName.get("out")))) {
+            scan.useDelimiter(System.lineSeparator());
             if (scan.hasNext()) {
                 StringJoiner joiner = new StringJoiner(argsName.get("delimiter"));
                 List<String> rows = Arrays.asList(scan.next().split(argsName.get("delimiter")));
@@ -46,5 +47,9 @@ public class CSVReader {
             throw new IllegalArgumentException(String.format("Invalid argument number 3 %s", args.get("out")));
         }
         args.get("filter");
+    }
+
+    public static void main(String[] args) throws Exception {
+        CSVReader.handle(ArgsName.of(args));
     }
 }
