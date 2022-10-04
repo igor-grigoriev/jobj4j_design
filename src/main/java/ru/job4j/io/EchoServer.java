@@ -18,12 +18,11 @@ public class EchoServer {
                     } else if (line.contains("?msg=Hello")) {
                         out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                         out.write("Hello".getBytes());
-                        out.flush();
                     } else if (line.contains("?msg=")) {
                         out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                         out.write("What".getBytes());
-                        out.flush();
                     }
+                    out.flush();
                 }
             }
         }
