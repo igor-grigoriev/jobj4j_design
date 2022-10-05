@@ -12,14 +12,13 @@ public class EchoServer {
                 try (OutputStream out = socket.getOutputStream();
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
+                    out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                     String line = in.readLine();
                     if (line.contains("?msg=Exit")) {
                         server.close();
                     } else if (line.contains("?msg=Hello")) {
-                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                         out.write("Hello".getBytes());
                     } else if (line.contains("?msg=")) {
-                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                         out.write("What".getBytes());
                     }
                     out.flush();
