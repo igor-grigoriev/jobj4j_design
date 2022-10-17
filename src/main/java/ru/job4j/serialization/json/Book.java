@@ -2,15 +2,33 @@ package ru.job4j.serialization.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 
+@XmlRootElement(name = "book")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Book {
-    private final String name;
-    private final int size;
-    private final boolean child;
-    private final String[] authors;
-    private final Publisher publisher;
+    @XmlAttribute
+    private String name;
+    @XmlAttribute
+    private int size;
+    @XmlAttribute
+    private boolean child;
+    @XmlElementWrapper(name = "authors")
+    @XmlElement(name = "author")
+    private String[] authors;
+    @XmlElement
+    private Publisher publisher;
+
+    public Book() {
+    }
 
     public Book(String name, int size, boolean child, String[] authors, Publisher publisher) {
         this.name = name;
@@ -26,20 +44,33 @@ public class Book {
                 + ", authors=" + Arrays.toString(authors) + ", publisher=" + publisher + "}";
     }
 
-    public static void main(String[] args) {
-        final Book book = new Book("Kolobok", 9, true,
+    public static void main(String[] args) throws JAXBException, IOException {
+        Book book = new Book("Kolobok", 9, true,
                 new String[] {"Ivan", "Igor"}, new Publisher("Moscow", 2022));
-
-        final Gson gson = new GsonBuilder().create();
-        System.out.println(gson.toJson(book));
-
-        final Book bookMod = gson.fromJson(gson.toJson(book), Book.class);
-        System.out.println(bookMod);
+        JAXBContext context = JAXBContext.newInstance(Book.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        String xml;
+        try (StringWriter writer = new StringWriter()) {
+            marshaller.marshal(book, writer);
+            xml = writer.getBuffer().toString();
+            System.out.println(xml);
+        }
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        try (StringReader reader = new StringReader(xml)) {
+            Book result = (Book) unmarshaller.unmarshal(reader);
+            System.out.println(result);
+        }
     }
 
     private static class Publisher {
-        String name;
-        int year;
+        @XmlAttribute
+        private String name;
+        @XmlAttribute
+        private int year;
+
+        private Publisher() {
+        }
 
         private Publisher(String name, int year) {
             this.name = name;
