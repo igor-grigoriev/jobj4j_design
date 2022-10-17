@@ -2,6 +2,8 @@ package ru.job4j.serialization.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.json.JSONObject;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -44,6 +46,26 @@ public class Book {
                 + ", authors=" + Arrays.toString(authors) + ", publisher=" + publisher + "}";
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isChild() {
+        return child;
+    }
+
+    public String[] getAuthors() {
+        return authors;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
     public static void main(String[] args) throws JAXBException, IOException {
         Book book = new Book("Kolobok", 9, true,
                 new String[] {"Ivan", "Igor"}, new Publisher("Moscow", 2022));
@@ -61,6 +83,19 @@ public class Book {
             Book result = (Book) unmarshaller.unmarshal(reader);
             System.out.println(result);
         }
+
+        JSONObject jsonBook = new JSONObject("{\"size\":9,\"name\":\"Kolobok\",\"publisher\":\"Publisher{name=Moscow, year=2022}\",\"child\":true,\"authors\":[\"Ivan\",\"Igor\"]}");
+        System.out.println(jsonBook);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", book.getName());
+        jsonObject.put("size", book.getSize());
+        jsonObject.put("child", book.isChild());
+        jsonObject.put("authors", book.getAuthors());
+        jsonObject.put("publisher", book.getPublisher());
+        System.out.println(jsonObject);
+
+        System.out.println(new JSONObject(book));
     }
 
     private static class Publisher {
@@ -77,9 +112,17 @@ public class Book {
             this.year = year;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public int getYear() {
+            return year;
+        }
+
         @Override
         public String toString() {
-            return "Publisher{name=" + name + ", year=" + year + "}";
+            return "Publisher{name=" + getName() + ", year=" + getYear() + "}";
         }
     }
 }
