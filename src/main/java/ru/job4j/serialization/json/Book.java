@@ -98,7 +98,7 @@ public class Book {
         System.out.println(new JSONObject(book));
     }
 
-    private static class Publisher {
+    public static class Publisher {
         @XmlAttribute
         private String name;
         @XmlAttribute
