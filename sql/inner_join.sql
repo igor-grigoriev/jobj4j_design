@@ -12,8 +12,8 @@ create table users (
 insert into role(name) values('role');
 insert into users(name,role_id) values('user',1);
 
-select user.name, role.name
-from role join users
+select u.name
+from role join users as u
 on role_id = u.id;
 
 select u.name, r.name
