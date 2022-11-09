@@ -52,13 +52,16 @@ select * from departments d
 left join employees e
 on e.department_id = d.id where e.id is null;
 
-select * from departments d
+select d.id, d.name, e.id, e.name
+from departments d
 left join employees e
 on e.department_id = d.id;
 
-select * from employees e
+select d.id, d.name, e.id, e.name
+from employees e
 right join departments d
 on e.department_id = d.id;
 
 select * from teens t1
-cross join teens t2;
+cross join teens t2
+where t1.gender <> t2.gender;
