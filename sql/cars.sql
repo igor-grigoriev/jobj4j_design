@@ -44,13 +44,13 @@ left join car_transmissions as t
 on c.transmission_id = t.id;
 
 select b.name from car_bodies as b
-right join cars as c
+left join cars as c
 on c.body_id is null;
 
 select e.name from car_engines as e
-right join cars as c
+left join cars as c
 on c.engine_id is null;
 
 select t.name from car_transmissions as t
-right join cars as c
+left join cars as c
 on c.transmission_id is null;
