@@ -13,12 +13,23 @@ create table history_of_price (
     date timestamp
 );
 
-create or replace function nalog()
+create or replace function nalog_after()
     returns trigger as
 $$
     BEGIN
         update products
-        set price = price + 1;
+        set price = price + 1
+        where id = (select id from inserted);
+        return new;
+    END;
+$$
+LANGUAGE 'plpgsql';
+
+create or replace function nalog_before()
+    returns trigger as
+$$
+    BEGIN
+        new.price = new.price + 1;
         return new;
     END;
 $$
@@ -28,12 +39,12 @@ create trigger nalog_after_trigger
     after insert on products
     referencing new table as inserted
     for each statement
-    execute procedure nalog();
+    execute procedure nalog_after();
 	
 create trigger nalog_before_trigger
     before insert on products
     for each row
-    execute procedure nalog();
+    execute procedure nalog_before();
 	
 create or replace function history()
     returns trigger as
