@@ -50,6 +50,22 @@ begin transaction;
 
 declare product scroll cursor for select * from products;
 
+fetch last from product;
+
+move backward 4 from product;
+
+fetch prior from product;
+
+move backward 7 from product;
+
+fetch prior from product;
+
+move backward 4 from product;
+
+fetch prior from product;
+
+fetch prior from product;
+
 close product;
 
 commit;
