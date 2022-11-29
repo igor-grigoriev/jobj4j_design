@@ -2,7 +2,10 @@ package ru.job4j.jdbc;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.util.StringJoiner;
 
@@ -23,70 +26,48 @@ public class TableEditor implements AutoCloseable {
         connection = DriverManager.getConnection(url, login, password);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         String tableName = "demo_table";
-        TableEditor editor = new TableEditor(getProperties());
-        editor.createTable(tableName);
-        System.out.println(editor.getTableScheme(tableName));
-        editor.addColumn(tableName, "demo_column", "int");
-        System.out.println(editor.getTableScheme("demo_table"));
-        editor.renameColumn(tableName, "demo_column", "rename_column");
-        System.out.println(editor.getTableScheme("demo_table"));
-        editor.dropColumn(tableName, "rename_column");
-        System.out.println(editor.getTableScheme("demo_table"));
-        editor.dropTable(tableName);
+        try (TableEditor editor = new TableEditor(getProperties())) {
+            editor.createTable(tableName);
+            System.out.println(editor.getTableScheme(tableName));
+            editor.addColumn(tableName, "demo_column", "int");
+            System.out.println(editor.getTableScheme("demo_table"));
+            editor.renameColumn(tableName, "demo_column", "rename_column");
+            System.out.println(editor.getTableScheme("demo_table"));
+            editor.dropColumn(tableName, "rename_column");
+            System.out.println(editor.getTableScheme("demo_table"));
+            editor.dropTable(tableName);
+        }
     }
 
     public void createTable(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "create table if not exists %s(%s, %s);",
-                    tableName, "id serial primary key", "name text"
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format("create table if not exists %s(%s);", tableName, "id serial primary key");
+        execute(sql);
     }
 
     public void dropTable(String tableName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "drop table %s ;", tableName
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format("drop table %s ;", tableName);
+        execute(sql);
     }
 
     public void addColumn(String tableName, String columnName, String type) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s add column %s %s;",
-                    tableName, columnName, type
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format("alter table %s add column %s %s;", tableName, columnName, type);
+        execute(sql);
     }
 
     public void dropColumn(String tableName, String columnName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s drop column %s;",
-                    tableName, columnName
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format("alter table %s drop column %s;", tableName, columnName);
+        execute(sql);
     }
 
     public void renameColumn(String tableName, String columnName, String newColumnName) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s rename column %s to %s;",
-                    tableName, columnName, newColumnName
-            );
-            statement.execute(sql);
-        }
+        String sql = String.format("alter table %s rename column %s to %s;",
+                tableName, columnName, newColumnName);
+        execute(sql);
     }
 
-    public String getTableScheme(String tableName) throws Exception {
+    public String getTableScheme(String tableName) throws SQLException {
         var rowSeparator = "-".repeat(30).concat(System.lineSeparator());
         var header = String.format("%-15s|%-15s%n", "NAME", "TYPE");
         var buffer = new StringJoiner(rowSeparator, rowSeparator, rowSeparator);
@@ -106,7 +87,7 @@ public class TableEditor implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws SQLException {
         if (connection != null) {
             connection.close();
         }
@@ -120,5 +101,11 @@ public class TableEditor implements AutoCloseable {
             e.printStackTrace();
         }
         return config;
+    }
+
+    private void execute(String sql) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
     }
 }
