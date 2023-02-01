@@ -1,20 +1,24 @@
 package ru.job4j.cache.menu;
 
 import ru.job4j.cache.DirFileCache;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Emulator {
+    private static final String MENU1 = "1. Указать кэшируемую директорию\n";
+    private static final String MENU2 = "2. Загрузить содержимое файла в кэш\n";
+    private static final String MENU3 = "3. Получить содержимое файла из кэша\n";
+    private static final String MENU4 = "4. Выход\n";
+    private static final String MENU = "Меню:\n" + MENU1 + MENU2 + MENU3 + MENU4 + "Выбор: ";
     private static Scanner scanner = new Scanner(System.in);
     private static DirFileCache dirFileCache;
 
-    @SuppressWarnings("checkstyle:InnerAssignment")
     public static void main(String[] args) {
         boolean run = true;
         while (run) {
-            showMenu();
+            System.out.print(MENU);
             int select = Integer.parseInt(scanner.nextLine());
             if (select < 1 || select > 4) {
                 System.out.println("Не выбран ни один из пунктов меню");
@@ -35,15 +39,6 @@ public class Emulator {
         }
     }
 
-    private static void showMenu() {
-        System.out.println("Меню:");
-        System.out.println("1. Указать кэшируемую директорию");
-        System.out.println("2. Загрузить содержимое файла в кэш");
-        System.out.println("3. Получить содержимое файла из кэша");
-        System.out.println("4. Выход");
-        System.out.print("Select: ");
-    }
-
     private static void selectDir() {
         System.out.print("Укажите кэшируемую директорию: ");
         String cachingDir = scanner.nextLine();
@@ -58,8 +53,9 @@ public class Emulator {
         if (dirFileCache != null) {
             System.out.print("Укажите имя файла: ");
             String fileName = scanner.nextLine();
-            if (Files.exists(Paths.get(dirFileCache.getCachingDir() + FileSystems.getDefault().getSeparator() + fileName))) {
-                dirFileCache.load(fileName);
+            if (Files.exists(Path.of(dirFileCache.getCachingDir(), fileName))) {
+                dirFileCache.get(fileName);
+                System.out.println("Содержимое указанного файла успешно загружено в кэш");
             } else {
                 System.out.println("Указанный файл не существует");
             }
@@ -72,7 +68,7 @@ public class Emulator {
         if (dirFileCache != null) {
             System.out.print("Укажите имя файла: ");
             String fileName = scanner.nextLine();
-            if (Files.exists(Paths.get(dirFileCache.getCachingDir() + FileSystems.getDefault().getSeparator() + fileName))) {
+            if (Files.exists(Path.of(dirFileCache.getCachingDir(), fileName))) {
                 System.out.println(dirFileCache.get(fileName));
             } else {
                 System.out.println("Указанный файл не существует");
