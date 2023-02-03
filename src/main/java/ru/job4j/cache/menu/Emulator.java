@@ -7,11 +7,18 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Emulator {
-    private static final String MENU1 = "1. Указать кэшируемую директорию\n";
-    private static final String MENU2 = "2. Загрузить содержимое файла в кэш\n";
-    private static final String MENU3 = "3. Получить содержимое файла из кэша\n";
-    private static final String MENU4 = "4. Выход\n";
-    private static final String MENU = "Меню:\n" + MENU1 + MENU2 + MENU3 + MENU4 + "Выбор: ";
+    private static final int SELECT_DIR = 1;
+    private static final int LOAD_FILE = 2;
+    private static final int GET_FILE = 3;
+    private static final int EXIT = 4;
+    private static final String MENU = """
+                Меню:
+                1. Указать кэшируемую директорию
+                2. Загрузить содержимое файла в кэш
+                3. Получить содержимое файла из кэша
+                4. Выход
+                "Выбор: "
+            """;
     private static Scanner scanner = new Scanner(System.in);
     private static DirFileCache dirFileCache;
 
@@ -20,18 +27,18 @@ public class Emulator {
         while (run) {
             System.out.print(MENU);
             int select = Integer.parseInt(scanner.nextLine());
-            if (select < 1 || select > 4) {
+            if (select < SELECT_DIR || select > EXIT) {
                 System.out.println("Не выбран ни один из пунктов меню");
                 continue;
             }
             switch (select) {
-                case 1: selectDir();
+                case SELECT_DIR: selectDir();
                     break;
-                case 2: loadFile();
+                case LOAD_FILE: loadFile();
                     break;
-                case 3: getFile();
+                case GET_FILE: getFile();
                     break;
-                case 4: run = false;
+                case EXIT: run = false;
                     break;
                 default: run = false;
                     break;
