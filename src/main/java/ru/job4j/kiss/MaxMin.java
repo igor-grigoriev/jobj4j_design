@@ -15,14 +15,17 @@ public class MaxMin {
     }
 
     private <T> T iterate(List<T> value, Comparator<T> comparator, Predicate<Integer> predicate) {
-        Iterator<? extends T> i = value.iterator();
-        T candidate = i.next();
-        while (i.hasNext()) {
-            T next = i.next();
-            if (predicate.test(comparator.compare(next, candidate))) {
-                candidate = next;
+        T result = null;
+        if (value != null && !value.isEmpty() && comparator != null) {
+            Iterator<? extends T> i = value.iterator();
+            result = i.next();
+            while (i.hasNext()) {
+                T next = i.next();
+                if (predicate.test(comparator.compare(next, result))) {
+                    result = next;
+                }
             }
         }
-        return candidate;
+        return result;
     }
 }
