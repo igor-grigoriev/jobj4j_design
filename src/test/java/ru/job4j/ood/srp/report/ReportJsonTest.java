@@ -15,8 +15,8 @@ class ReportJsonTest {
         Employee worker = new Employee("Ivan", hired, fired, 100);
         store.add(worker);
         Report json = new ReportJson(store);
-        String expect = "[{\"name\":\"Ivan\",\"hired\":{\"year\":2023,\"month\":4,\"dayOfMonth\":1,\"hourOfDay\":0,\"minute\":0,\"second\":0},"
-                + "\"fired\":{\"year\":2023,\"month\":4,\"dayOfMonth\":30,\"hourOfDay\":0,\"minute\":0,\"second\":0},\"salary\":100.0}]";
+        String expect = "[{\"name\":\"Ivan\",\"hired\":{\"year\":2023,\"month\":3,\"dayOfMonth\":1,\"hourOfDay\":0,\"minute\":0,\"second\":0},"
+                + "\"fired\":{\"year\":2023,\"month\":3,\"dayOfMonth\":30,\"hourOfDay\":0,\"minute\":0,\"second\":0},\"salary\":100.0}]";
         assertThat(json.generate(em -> true)).isEqualTo(expect);
     }
 }
