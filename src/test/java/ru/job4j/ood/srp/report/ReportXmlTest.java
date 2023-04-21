@@ -16,8 +16,8 @@ class ReportXmlTest {
         Employee worker = new Employee("Ivan", hired, fired, 100);
         store.add(worker);
         Report xml = new ReportXml(store);
-        String expect = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><employees><employees><fired>2023-04-30T00:00:00+03:00</fired>" +
-                "<hired>2023-04-01T00:00:00+03:00</hired><name>Ivan</name><salary>100.0</salary></employees></employees>";
+        String expect = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><employees><employees><fired>2023-04-30T00:00:00+03:00</fired>"
+                + "<hired>2023-04-01T00:00:00+03:00</hired><name>Ivan</name><salary>100.0</salary></employees></employees>";
         assertThat(xml.generate(em -> true)).isEqualTo(expect);
     }
 }
