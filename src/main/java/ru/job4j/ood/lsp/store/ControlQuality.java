@@ -1,5 +1,6 @@
 package ru.job4j.ood.lsp.store;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControlQuality {
@@ -17,5 +18,20 @@ public class ControlQuality {
 
     public List<Store> getsStores() {
         return stores;
+    }
+
+    public void restore() {
+        for (Store store : stores) {
+            List<Food> foods = new ArrayList<>(((AbstractStore) store).foods);
+            for (Store controlStore : stores) {
+                if (!store.equals(controlStore)) {
+                    for (Food food : foods) {
+                        if (controlStore.add(food)) {
+                            store.delete(food);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
