@@ -30,4 +30,8 @@ public class Node<E> {
     public List<Node<E>> getChildren() {
         return children;
     }
+
+    public void addChildren(Node<E> child) {
+        children.add(child);
+    }
 }
