@@ -27,4 +27,12 @@ public class SimpleQueue<T> {
         in.push(value);
         inCount++;
     }
+
+    public int getInCount() {
+        return inCount;
+    }
+
+    public int getOutCount() {
+        return outCount;
+    }
 }
