@@ -96,4 +96,16 @@ class BinarySearchTreeTest {
         assertThat(tree.inPostOrder()).hasSize(7)
                 .containsExactly(1, 3, 2, 5, 7, 6, 4);
     }
+
+    @Test
+    void whenRemoveThenOk() {
+        BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+        int[] array = new int[]{2, 1, 10, 6, 14, 4, 8, 12, 16, 11, 9, 13, 15, 17, 3, 5, 7};
+        for (int i : array) {
+            tree.put(i);
+        }
+        tree.remove(10);
+        assertThat(tree.inSymmetricalOrder()).hasSize(16)
+                .containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17);
+    }
 }
