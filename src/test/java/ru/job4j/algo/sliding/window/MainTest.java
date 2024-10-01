@@ -20,6 +20,18 @@ public class MainTest {
     }
 
     @Test
+    public void whenSequentialIntervalsThenFindMaxOverlapInterval() {
+        List<Interval> intervals = new ArrayList<>();
+        intervals.add(new Interval(1, 3));
+        intervals.add(new Interval(2, 4));
+        intervals.add(new Interval(3, 5));
+        intervals.add(new Interval(4, 6));
+
+        int[] result = Main.findMaxOverlapInterval(intervals);
+        assertThat(result).containsExactly(3, 4);
+    }
+
+    @Test
     public void whenNonOverlappingIntervalsThenFindMaxOverlapInterval() {
         List<Interval> intervals = new ArrayList<>();
         intervals.add(new Interval(1, 10));
