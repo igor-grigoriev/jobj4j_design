@@ -16,23 +16,83 @@ public class UndergroundParking implements Parking {
         }
     }
 
-    @Override
     public boolean park(Car car) {
-        return false;
+        boolean result = false;
+        if (car.getSize() > 1) {
+            for (Cell cell : truckCells) {
+                result = cell.input(car);
+                if (result) {
+                    return result;
+                }
+            }
+            long unbusyPassengerCellsCount = getUnbusyPassengerCellsCount();
+            if (car.getSize() <= unbusyPassengerCellsCount) {
+                int count = 0;
+                for (Cell cell : passengerCells) {
+                    if (count == car.getSize()) {
+                        return true;
+                    }
+                    if (cell.input(car)) {
+                        count++;
+                    }
+                }
+            }
+        } else {
+            for (Cell cell : passengerCells) {
+                result = cell.input(car);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+        return result;
     }
 
-    @Override
     public void unpark(Car car) {
-
+        boolean unpark = false;
+        if (car.getSize() > 1) {
+            for (Cell cell : truckCells) {
+                unpark = cell.output(car);
+                if (unpark) {
+                    break;
+                }
+            }
+            if (!unpark) {
+                for (Cell cell : passengerCells) {
+                    cell.output(car);
+                }
+            }
+        } else {
+            for (Cell cell : passengerCells) {
+                unpark = cell.output(car);
+                if (unpark) {
+                    break;
+                }
+            }
+        }
     }
 
-    @Override
     public long getBusyCellsCount() {
-        return 0;
+        return getBusyTruckCellsCount() + getBusyPassengerCellsCount();
     }
 
-    @Override
     public long getUnbusyCellsCount() {
-        return 0;
+        return getUnbusyTruckCellsCount() + getUnbusyPassengerCellsCount();
+    }
+
+    public long getBusyTruckCellsCount() {
+        return truckCells.stream().filter(Cell::isBusy).count();
+    }
+
+    public long getUnbusyTruckCellsCount() {
+        return truckCells.stream().filter(cell -> !cell.isBusy()).count();
+    }
+
+    public long getBusyPassengerCellsCount() {
+        return passengerCells.stream().filter(Cell::isBusy).count();
+    }
+
+    public long getUnbusyPassengerCellsCount() {
+        return passengerCells.stream().filter(cell -> !cell.isBusy()).count();
     }
 }

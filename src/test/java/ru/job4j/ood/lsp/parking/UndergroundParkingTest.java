@@ -1,10 +1,8 @@
 package ru.job4j.ood.lsp.parking;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
-@Disabled
 class UndergroundParkingTest {
     @Test
     public void whenGetCarSize() {
@@ -12,6 +10,7 @@ class UndergroundParkingTest {
         Car truckCar = new TruckCar();
         assertThat(passengerCar.getSize()).isEqualTo(1);
         assertThat(truckCar.getSize()).isGreaterThan(1);
+        assertThatThrownBy(() -> new TruckCar(1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -45,5 +44,15 @@ class UndergroundParkingTest {
         Parking parking = new UndergroundParking(1, 3);
         assertThat(parking.getBusyCellsCount()).isEqualTo(0);
         assertThat(parking.getUnbusyCellsCount()).isEqualTo(4);
+        Car passengerCar = new PassengerCar();
+        Car truckCar1 = new TruckCar();
+        Car truckCar2 = new TruckCar();
+        assertThat(parking.park(passengerCar)).isTrue();
+        assertThat(parking.getBusyCellsCount()).isEqualTo(1);
+        assertThat(parking.getUnbusyCellsCount()).isEqualTo(3);
+        assertThat(parking.park(truckCar1)).isTrue();
+        assertThat(parking.getBusyCellsCount()).isEqualTo(2);
+        assertThat(parking.getUnbusyCellsCount()).isEqualTo(2);
+        assertThat(parking.park(truckCar2)).isFalse();
     }
 }
