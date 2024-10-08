@@ -8,10 +8,10 @@ public class UndergroundParking implements Parking {
     private final List<Cell> passengerCells = new ArrayList<>();
 
     public UndergroundParking(int truckCellCount, int passengerCellCount) {
-        for (int i = 0; i < truckCellCount; i++ ) {
+        for (int i = 0; i < truckCellCount; i++) {
             truckCells.add(new TruckCell());
         }
-        for (int i = 0; i < passengerCellCount; i++ ) {
+        for (int i = 0; i < passengerCellCount; i++) {
             passengerCells.add(new PassengerCell());
         }
     }
